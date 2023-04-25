@@ -15,7 +15,7 @@ windll.user32.MoveWindow(hwnd, 300, 50, WIDTH, HEIGHT, False)
 mod = modules["__main__"]
 speed = 5
 # objects
-lands = [Actor("land_green", (land * 64 + 32, HEIGHT - 32)) for land in range(WIDTH // 64 + 1)]
+lands = [Actor("land_green", (land * 64 + 32, HEIGHT - 32)) for land in range(WIDTH // 64 + 2)]
 mario = Actor("p1", (50, HEIGHT - 91))
 obstacles = []
 for obs in range(4):
@@ -34,5 +34,9 @@ def update():
     # move
     for land_item in lands: land_item.x -= speed
     for obstacle_item in obstacles: obstacle_item.x -= speed
-
+    # objects_loop
+    for land_item in lands:
+        if land_item.x < - land_item.width // 2:
+            last_land = lands[lands.index(land_item) - 1]
+            land_item.x = last_land.x + 64
 pgzrun.go()
