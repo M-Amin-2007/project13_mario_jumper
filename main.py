@@ -1,6 +1,6 @@
 """write by: Amin"""
 from ctypes import windll
-from random import choice
+from random import choice, randint
 from sys import modules
 import pgzrun
 import pygame
@@ -35,6 +35,12 @@ def update():
     for land_item in lands: land_item.x -= speed
     for obstacle_item in obstacles: obstacle_item.x -= speed
     # objects_loop
+    for obstacle_item in obstacles:
+        if obstacle_item.x < -obstacle_item.width // 2:
+            obstacle_item.image = choice(["obj1", "obj2", "obj3"])
+            new_x = obstacles[obstacles.index(obstacle_item) - 1].x +\
+                    randint(int(160 * speed ** 0.5), int(210 * speed ** 0.5))
+            obstacle_item.bottomleft = (new_x, HEIGHT - 64)
     for land_item in lands:
         if land_item.x < - land_item.width // 2:
             last_land = lands[lands.index(land_item) - 1]
