@@ -27,6 +27,8 @@ windll.user32.MoveWindow(hwnd, 300, 50, WIDTH, HEIGHT, False)
 mod = modules["__main__"]
 speed = 5
 frame = 0
+jump_height = 120
+jump_length = 500
 # objects
 lands = [MyActor("land_green", (land * 64 + 32, HEIGHT - 32)) for land in range(WIDTH // 64 + 2)]
 mario = MyActor("p1", (50, HEIGHT - 91))
@@ -67,10 +69,16 @@ def update():
     if frame % (7 // speed ** 0.5) == 0: mario.next_image()
     if keyboard.space: mario.status = "jump"
     if mario.status == "jump":
-        mario.jump_counter += 1
-        jump_height = 100
-        jump_length = 300
-        mario.y -= 4 * jump_height / jump_length * (-2/jump_length * mario.jump_counter + 1)
+        mario.image = "p2"
+        mario.jump_counter += speed
+        if mario.collidelist(lands) != -1:
+            mario.status = "run"
+            mario.jump_counter = 0
+            print(mario.jump_counter)
+        mario.y -= 4 * jump_height / jump_length * (-2 / jump_length * mario.jump_counter + 1) * speed
+
+
+
 
 
 pgzrun.go()
