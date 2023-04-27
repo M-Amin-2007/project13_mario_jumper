@@ -27,8 +27,8 @@ windll.user32.MoveWindow(hwnd, 300, 50, WIDTH, HEIGHT, False)
 mod = modules["__main__"]
 speed = 5
 frame = 0
-jump_height = 120
-jump_length = 500
+jump_height = 170
+jump_length = 380
 # objects
 lands = [MyActor("land_green", (land * 64 + 32, HEIGHT - 32)) for land in range(WIDTH // 64 + 2)]
 mario = MyActor("p1", (50, HEIGHT - 91))
@@ -38,7 +38,7 @@ mario.images = ["p1", "p2", "p3"]
 obstacles = []
 for obs in range(4):
     obstacle = MyActor(choice(["obj1", "obj2", "obj3"]))
-    obstacle.midbottom = (obs * 400 + 500, HEIGHT - 64)
+    obstacle.bottomleft = (obs * 100 * speed + 500, HEIGHT - 64)
     obstacles.append(obstacle)
 # main loop functions
 def draw():
@@ -59,23 +59,27 @@ def update():
         if obstacle_item.x < -obstacle_item.width // 2:
             obstacle_item.image = choice(["obj1", "obj2", "obj3"])
             new_x = obstacles[obstacles.index(obstacle_item) - 1].x +\
-                    randint(int(160 * speed ** 0.5), int(210 * speed ** 0.5))
+                    randint(int(180 * speed ** 0.5), int(230 * speed ** 0.5))
             obstacle_item.bottomleft = (new_x, HEIGHT - 64)
     for land_item in lands:
         if land_item.x < - land_item.width // 2:
             last_land = lands[lands.index(land_item) - 1]
             land_item.x = last_land.x + 64
-    # mario_part
+    # mario_change_image
     if frame % (7 // speed ** 0.5) == 0: mario.next_image()
+    # mario_jumping
     if keyboard.space: mario.status = "jump"
     if mario.status == "jump":
         mario.image = "p2"
         mario.jump_counter += speed
+        mario.y -= 4 * jump_height / jump_length * (-2 / jump_length * mario.jump_counter + 1) * speed
         if mario.collidelist(lands) != -1:
             mario.status = "run"
             mario.jump_counter = 0
-            print(mario.jump_counter)
-        mario.y -= 4 * jump_height / jump_length * (-2 / jump_length * mario.jump_counter + 1) * speed
+            mario.bottom = HEIGHT - 64
+    # mario_collide_to_obstacles
+    if mario.collidelist(obstacles) != -1:
+        quit()
 
 
 
