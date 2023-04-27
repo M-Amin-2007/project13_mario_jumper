@@ -5,6 +5,9 @@ from sys import modules
 import pgzrun
 import pygame
 from pgzero.actor import Actor
+from pgzero.keyboard import keyboard
+
+
 # functions and classes
 class MyActor(Actor):
     """make personalization the class."""
@@ -22,11 +25,13 @@ TITLE = "Mario Jumper 2023"
 hwnd = pygame.display.get_wm_info()["window"]
 windll.user32.MoveWindow(hwnd, 300, 50, WIDTH, HEIGHT, False)
 mod = modules["__main__"]
-speed = 10
+speed = 5
 frame = 0
 # objects
 lands = [MyActor("land_green", (land * 64 + 32, HEIGHT - 32)) for land in range(WIDTH // 64 + 2)]
 mario = MyActor("p1", (50, HEIGHT - 91))
+mario.status = "run"
+mario.jump_counter = 0
 mario.images = ["p1", "p2", "p3"]
 obstacles = []
 for obs in range(4):
@@ -59,6 +64,13 @@ def update():
             last_land = lands[lands.index(land_item) - 1]
             land_item.x = last_land.x + 64
     # mario_part
-    if frame % (7 // speed ** 0.5) == 0:
-        mario.next_image()
+    if frame % (7 // speed ** 0.5) == 0: mario.next_image()
+    if keyboard.space: mario.status = "jump"
+    if mario.status == "jump":
+        mario.jump_counter += 1
+        jump_height = 100
+        jump_length = 300
+        mario.y -= 4 * jump_height / jump_length * (-2/jump_length * mario.jump_counter + 1)
+
+
 pgzrun.go()
