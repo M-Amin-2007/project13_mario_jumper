@@ -36,7 +36,8 @@ mario.status = "run"
 mario.jump_counter = 0
 mario.images = ["p1", "p2", "p3"]
 obstacles = []
-clouds = [Actor(f"cloud{choice([1, 2, 3])}", (WIDTH - 100, 50))]
+clouds = [Actor(f"cloud{choice([1, 2, 3])}", (WIDTH + 100, randint(30, 60)))]
+clouds[0].speed_coe = randint(2, 8) * 0.01
 for obs in range(4):
     obstacle = MyActor(choice(["obj1", "obj2", "obj3"]))
     obstacle.bottomleft = (obs * 100 * speed + 500, HEIGHT - 64)
@@ -57,6 +58,7 @@ def update():
     # move
     for land_item in lands: land_item.x -= speed
     for obstacle_item in obstacles: obstacle_item.x -= speed
+    for cloud_item in clouds: cloud_item.x -= speed * cloud_item.speed_coe
     # objects_loop
     for obstacle_item in obstacles:
         if obstacle_item.x < -obstacle_item.width // 2:
