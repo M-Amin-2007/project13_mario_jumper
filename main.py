@@ -85,7 +85,11 @@ def update():
     # mario_collide_to_obstacles
     if mario.collidelist(obstacles) != -1:
         quit()
-
+    # manage clouds
+    if frame % 20 == 0 and randint(1, 1000) <= 5:
+        cloud = Actor(f"cloud{choice([1, 2, 3])}", (WIDTH + 100, randint(30, 60)))
+        cloud.speed_coe = randint(2, 8) * 0.01
+        clouds.append(cloud)
 
 
 
