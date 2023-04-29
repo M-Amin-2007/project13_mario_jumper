@@ -36,6 +36,7 @@ mario.status = "run"
 mario.jump_counter = 0
 mario.images = ["p1", "p2", "p3"]
 obstacles = []
+clouds = [Actor(f"cloud{choice([1, 2, 3])}", (WIDTH - 100, 50))]
 for obs in range(4):
     obstacle = MyActor(choice(["obj1", "obj2", "obj3"]))
     obstacle.bottomleft = (obs * 100 * speed + 500, HEIGHT - 64)
@@ -44,6 +45,7 @@ for obs in range(4):
 def draw():
     """draw everything in game here."""
     mod.screen.blit("sky2", (0, 0))
+    for cloud_item in clouds: cloud_item.draw()
     for land_item in lands: land_item.draw()
     mario.draw()
     for obstacle_item in obstacles: obstacle_item.draw()
