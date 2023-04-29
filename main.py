@@ -49,8 +49,9 @@ def draw():
     for obstacle_item in obstacles: obstacle_item.draw()
 def update():
     """update every thing in every frame."""
-    global frame
+    global frame, speed
     frame += 1
+    speed = 0.25 * frame ** 0.5 + 3
     # move
     for land_item in lands: land_item.x -= speed
     for obstacle_item in obstacles: obstacle_item.x -= speed
@@ -66,7 +67,7 @@ def update():
             last_land = lands[lands.index(land_item) - 1]
             land_item.x = last_land.x + 64
     # mario_change_image
-    if frame % (7 // speed ** 0.5) == 0: mario.next_image()
+    if frame % (10 // speed ** 0.5) == 0: mario.next_image()
     # mario_jumping
     if keyboard.space: mario.status = "jump"
     if mario.status == "jump":
