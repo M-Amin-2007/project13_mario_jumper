@@ -95,8 +95,15 @@ def update():
         cloud = Actor(f"cloud{choice([1, 2, 3])}", (WIDTH + 100, randint(30, 60)))
         cloud.speed_coe = randint(2, 8) * 0.01
         clouds.append(cloud)
-
-
+    # fighter plane
+    if frame % 500 == plane.attack_time and plane.status == "refueling":
+        plane.status = "attack"
+        plane.attack_time = randint(1, 499)
+    if plane.status == "attack":
+        plane.x -= speed + 2
+    if plane.x < -plane.width // 2:
+        plane.status = "refueling"
+        plane.x = WIDTH + 100
 
 
 pgzrun.go()
