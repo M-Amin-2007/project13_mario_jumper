@@ -38,6 +38,10 @@ mario.images = ["p1", "p2", "p3"]
 obstacles = []
 clouds = [Actor(f"cloud{choice([1, 2, 3])}", (WIDTH + 100, randint(30, 60)))]
 clouds[0].speed_coe = randint(2, 8) * 0.01
+plane = Actor("plane", (WIDTH + 100, 90))
+plane.attack_time = 0
+plane.status = "refueling"
+bombs = []
 for obs in range(4):
     obstacle = MyActor(choice(["obj1", "obj2", "obj3"]))
     obstacle.bottomleft = (obs * 100 * speed + 500, HEIGHT - 64)
@@ -47,6 +51,7 @@ def draw():
     """draw everything in game here."""
     mod.screen.blit("sky2", (0, 0))
     for cloud_item in clouds: cloud_item.draw()
+    plane.draw()
     for land_item in lands: land_item.draw()
     mario.draw()
     for obstacle_item in obstacles: obstacle_item.draw()
