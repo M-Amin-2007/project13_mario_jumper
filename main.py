@@ -7,7 +7,6 @@ import pygame
 from pgzero.actor import Actor
 from pgzero.keyboard import keyboard
 
-
 # functions and classes
 class MyActor(Actor):
     """make personalization the class."""
@@ -60,7 +59,7 @@ def update():
     """update every thing in every frame."""
     global frame, speed, bombs
     frame += 1
-    speed = 0.25 * frame ** 0.5 + 3
+    speed = 0.5 * frame ** 0.25 + 3
     # move
     for land_item in lands: land_item.x -= speed
     for obstacle_item in obstacles: obstacle_item.x -= speed
@@ -114,10 +113,20 @@ def update():
     if plane.x < -plane.width // 2:
         plane.status = "refueling"
         plane.x = WIDTH + 100
-    # bomb motion
+    # bomb
     for bomb_item in bombs:
+        # motion
         bomb_item.x -= bomb_item.speed
         bomb_item.y += bomb_item.fail_slope * bomb_item.speed
+        # explosion
+        if bomb_item.colliderect(mario):
+            quit()
+        if bomb_item.collidelist(obstacles) != -1:
+            obstacles.pop(bomb_item.collidelist(obstacles))
+            bombs.remove(bomb_item)
+        if bomb_item.collidelist(lands) != -1:
+            bombs.remove(bomb_item)
+
 
 
 pgzrun.go()
