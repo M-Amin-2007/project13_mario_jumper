@@ -51,13 +51,14 @@ def draw():
     """draw everything in game here."""
     mod.screen.blit("sky2", (0, 0))
     for cloud_item in clouds: cloud_item.draw()
+    for bomb_item in bombs: bomb_item.draw()
     plane.draw()
     for land_item in lands: land_item.draw()
     mario.draw()
     for obstacle_item in obstacles: obstacle_item.draw()
 def update():
     """update every thing in every frame."""
-    global frame, speed
+    global frame, speed, bombs
     frame += 1
     speed = 0.25 * frame ** 0.5 + 3
     # move
@@ -96,14 +97,27 @@ def update():
         cloud.speed_coe = randint(2, 8) * 0.01
         clouds.append(cloud)
     # fighter plane
-    if frame % 500 == plane.attack_time and plane.status == "refueling":
+    if frame % 20 == plane.attack_time and plane.status == "refueling":
         plane.status = "attack"
-        plane.attack_time = randint(1, 499)
+        plane.attack_time = randint(1, 19)
+        bombs = []
     if plane.status == "attack":
-        plane.x -= speed + 2
+        plane.x -= speed + 1
+        x = plane.x - mario.x
+        if abs(mario.y - x) < speed:
+            bomb = Actor("bomb", plane.pos)
+            bomb.angle = 315
+            bomb.fail_counter = 0
+            bomb.speed = speed + 1
+            bomb.fail_slope = abs((bomb.y - mario.y) / (bomb.x - mario.x))
+            bombs.append(bomb)
     if plane.x < -plane.width // 2:
         plane.status = "refueling"
         plane.x = WIDTH + 100
+    # bomb motion
+    for bomb_item in bombs:
+        bomb_item.x -= bomb_item.speed
+        bomb_item.y += bomb_item.fail_slope * bomb_item.speed
 
 
 pgzrun.go()
